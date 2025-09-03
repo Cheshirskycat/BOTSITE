@@ -1,121 +1,100 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VPN — Mini App</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    :root{
-      --bg:#0f0f0f; --text:#eaeaea; --hint:#9aa0a6; --link:#5ea0ff;
-      --btn:#5ea0ff; --btn-text:#0b1020; --card:#151515; --border:#2a2a2a;
-    }
-    [data-theme="light"]{
-      --bg:#ffffff; --text:#111; --hint:#667; --link:#0b62ff;
-      --btn:#0b62ff; --btn-text:#fff; --card:#f6f7fb; --border:#e5e7eb;
-    }
-    html,body{height:100%}
-    body{
-      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background:var(--bg); color:var(--text);
-    }
-    .wrap{max-width:760px; margin:0 auto; padding:16px;}
-    h1{margin:0 0 12px; font-size:20px}
-    .tabs{display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 16px}
-    .tab{
-      padding:10px 12px; border-radius:10px; border:1px solid var(--border);
-      background:var(--card); cursor:pointer; user-select:none;
-    }
-    .tab.active{ outline:2px solid var(--btn); }
-    .card{
-      border:1px solid var(--border); background:var(--card);
-      border-radius:14px; padding:14px; margin:0 0 12px;
-    }
-    label{display:block; margin:8px 0 6px; font-size:14px; opacity:.9}
-    input,select,textarea{
-      width:100%; padding:12px; border-radius:12px; border:1px solid var(--border);
-      background:transparent; color:var(--text); outline:none;
-    }
-    textarea{min-height:72px; resize:vertical}
-    .row{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:8px;
-      border:none; background:var(--btn); color:var(--btn-text);
-      padding:12px 14px; border-radius:12px; cursor:pointer; font-weight:600;
-    }
-    .btn[disabled]{opacity:.5; cursor:not-allowed}
-    .muted{font-size:13px; color:var(--hint); margin-top:6px}
-    .list{display:grid; gap:8px}
-    .item{padding:10px; border:1px solid var(--border); border-radius:10px}
-    a{color:var(--link); text-decoration:none}
-    .right{display:flex; gap:8px; flex-wrap:wrap}
-    .danger{background:#ef4444; color:#fff}
-    .ok{background:#10b981; color:#072;}
-    .warning{background:#f59e0b; color:#211;}
-    .hidden{display:none}
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>VPN — Mini App</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --bg:#0f1115; --text:#eef2f6; --hint:#9aa0a6; --link:#5ea0ff;
+  --btn:#5ea0ff; --btn-text:#0b1020; --card:#151923; --border:#2a3242;
+}
+[data-theme="light"]{
+  --bg:#ffffff; --text:#111; --hint:#667; --link:#0b62ff;
+  --btn:#0b62ff; --btn-text:#fff; --card:#f6f7fb; --border:#e5e7eb;
+}
+html,body{height:100%}
+body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text)}
+.wrap{max-width:820px; margin:0 auto; padding:16px}
+h1{margin:0 0 14px; font-size:22px}
+.tabs{display:flex; gap:8px; flex-wrap:wrap; margin:6px 0 16px}
+.tab{padding:10px 12px; border-radius:10px; border:1px solid var(--border); background:var(--card); cursor:pointer}
+.tab.active{outline:2px solid var(--btn)}
+.card{border:1px solid var(--border); background:var(--card); border-radius:14px; padding:14px; margin:0 0 12px}
+label{display:block; margin:8px 0 6px; font-size:14px}
+input,textarea{width:100%; padding:12px; border-radius:12px; border:1px solid var(--border); background:transparent; color:var(--text); outline:none}
+textarea{min-height:72px; resize:vertical}
+.right{display:flex; gap:8px; flex-wrap:wrap}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:none; background:var(--btn); color:var(--btn-text); padding:12px 14px; border-radius:12px; cursor:pointer; font-weight:600}
+.btn[disabled]{opacity:.5; cursor:not-allowed}
+.btn.alt{background:transparent; color:var(--text); border:1px solid var(--border)}
+.btn.alt.active{outline:2px solid var(--btn)}
+.muted{font-size:13px; color:var(--hint); margin-top:6px}
+.list{display:grid; gap:8px}
+.item{padding:10px; border:1px solid var(--border); border-radius:10px}
+.hidden{display:none}
+</style>
 </head>
 <body>
 <div class="wrap">
   <h1>Подписка VPN</h1>
-
   <div class="tabs" id="tabs"></div>
 
-  <!-- DASHBOARD -->
+  <!-- Статус -->
   <section id="tab-dashboard" class="tabpage">
     <div class="card">
       <div id="me"></div>
-      <div class="muted">Здесь отображается ваш статус и остаток дней.</div>
+      <div class="muted">Остаток дней и информация профиля.</div>
     </div>
   </section>
 
-  <!-- BUY -->
+  <!-- Купить -->
   <section id="tab-buy" class="tabpage hidden">
     <div class="card">
       <label>Пакет</label>
-      <select id="days">
-        <option value="30">30 дней</option>
-        <option value="60">60 дней (−5%)</option>
-        <option value="90">90 дней (−10%)</option>
-      </select>
-      <div class="row">
-        <div>
-          <label>Кол-во людей</label>
-          <select id="seats">
-            <option>1</option><option>2</option><option>3</option>
-            <option>4</option><option>5</option><option>6</option>
-            <option>7</option><option>8</option><option>9</option><option>10</option>
-          </select>
-        </div>
-        <div>
-          <label>Комментарий (необязательно)</label>
-          <input id="comment" placeholder="Имена/никнеймы для группы"/>
-        </div>
+      <div id="days-grid" class="right" style="flex-wrap:wrap">
+        <button class="btn alt" data-days="30"  type="button">30 дней</button>
+        <button class="btn alt" data-days="60"  type="button">60 дней (−5%)</button>
+        <button class="btn alt" data-days="90"  type="button">90 дней (−10%)</button>
       </div>
+
+      <label style="margin-top:10px">Кол-во людей</label>
+      <div id="seats-grid" class="right" style="flex-wrap:wrap">
+        <button class="btn alt" data-seats="1" type="button">1</button>
+        <button class="btn alt" data-seats="2" type="button">2</button>
+        <button class="btn alt" data-seats="3" type="button">3</button>
+        <button class="btn alt" data-seats="4" type="button">4</button>
+        <button class="btn alt" data-seats="5" type="button">5</button>
+      </div>
+
+      <label style="margin-top:10px">Комментарий (необязательно)</label>
+      <input id="comment" placeholder="Имена/никнеймы для группы"/>
+
       <div class="right" style="margin-top:10px">
         <button class="btn" id="btn-calc" type="button">🧮 Рассчитать</button>
-        <button class="btn" id="btn-buy" type="button" disabled>💳 Оформить</button>
+        <button class="btn" id="btn-buy"  type="button" disabled>💳 Оформить</button>
       </div>
       <div id="buy-info" class="muted"></div>
     </div>
   </section>
 
-  <!-- PAYMENTS -->
+  <!-- Платежи -->
   <section id="tab-payments" class="tabpage hidden">
     <div class="card">
       <div class="right" style="margin-bottom:10px">
         <button class="btn" id="btn-refresh" type="button">🔄 Обновить</button>
       </div>
       <div id="payments" class="list"></div>
-      <div class="muted">Показывается история ваших платежей.</div>
+      <div class="muted">История ваших платежей.</div>
     </div>
   </section>
 
-  <!-- PROFILE -->
+  <!-- Профиль -->
   <section id="tab-profile" class="tabpage hidden">
     <div class="card">
       <label>Ник (видно админу)</label>
-      <input id="prof-username" />
+      <input id="prof-username"/>
       <label>Комментарий</label>
       <textarea id="prof-comment" placeholder="Пожелания, контакт и т.д."></textarea>
       <div class="right" style="margin-top:10px">
@@ -125,19 +104,17 @@
     </div>
   </section>
 
-  <!-- ADMIN -->
+  <!-- Админ -->
   <section id="tab-admin" class="tabpage hidden">
     <div class="card">
-      <div class="row">
-        <div>
-          <label>Поиск (id или username)</label>
-          <input id="adm-q" placeholder="251385778 или @username"/>
-        </div>
-        <div style="display:flex;align-items:end">
-          <button class="btn" id="adm-search" type="button">🔎 Найти</button>
-        </div>
+      <div class="right" style="margin-bottom:10px">
+        <input id="adm-q" placeholder="Поиск: id или @username" style="flex:1; min-width:240px"/>
+        <button class="btn" id="adm-search" type="button">🔎 Найти</button>
+        <button class="btn" type="button" onclick="admQueue()">🕗 Ожидают подтверждения</button>
       </div>
-      <div id="adm-users" class="list" style="margin-top:10px"></div>
+      <div id="adm-users" class="list"></div>
+      <hr style="border:0;border-top:1px solid var(--border);margin:12px 0">
+      <div id="adm-pending" class="list"></div>
     </div>
 
     <div class="card">
@@ -153,183 +130,186 @@
 </div>
 
 <script>
-  // ====== Telegram integration ======
-  const tg = window.Telegram.WebApp;
-  tg.ready();       // <— важно, иначе бывают "не кликаются"
-  tg.expand();
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
 
-  // Theme bind
-  function applyTheme(){
-    const p = tg.themeParams || {};
-    const isDark = (tg.colorScheme || 'dark') === 'dark';
-    document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
-    // hard map only if present — иначе остаются дефолтные из :root
-    const map = {
-      '--bg': p.bg_color, '--text': p.text_color, '--hint': p.hint_color,
-      '--link': p.link_color, '--btn': p.button_color, '--btn-text': p.button_text_color,
-      '--card': p.secondary_bg_color
-    };
-    const root = document.documentElement.style;
-    Object.entries(map).forEach(([k,v])=>{ if(v){ root.setProperty(k, v); }});
-  }
-  applyTheme();
-  tg.onEvent('themeChanged', applyTheme);
+// ===== Theme
+function applyTheme(){
+  const p = tg.themeParams || {};
+  const isDark = (tg.colorScheme || 'dark') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  const map = {
+    '--bg': p.bg_color, '--text': p.text_color, '--hint': p.hint_color,
+    '--link': p.link_color, '--btn': p.button_color, '--btn-text': p.button_text_color,
+    '--card': p.secondary_bg_color
+  };
+  const root = document.documentElement.style;
+  Object.entries(map).forEach(([k,v])=>{ if(v){ root.setProperty(k, v); }});
+}
+applyTheme(); tg.onEvent('themeChanged', applyTheme);
 
-  document.getElementById('botname').textContent = tg.initDataUnsafe?.bot?.username
-    ? '@' + tg.initDataUnsafe.bot.username : '';
+document.getElementById('botname').textContent = tg.initDataUnsafe?.bot?.username ? '@'+tg.initDataUnsafe.bot.username : '';
 
-  // ====== API helper ======
-  // ВСТАВЬ сюда свой публичный HTTPS бэкенда (получишь на шаге 3)
-  const API_BASE = "https://slow-bottles-taste.loca.lt/api";
+// ===== API
+const API_BASE = "https://slow-bottles-taste.loca.lt/api"; // <<< ВСТАВЬ свой lt-адрес
 
-  async function api(path, method='GET', body){
-    const res = await fetch(API_BASE + path, {
-      method,
-      headers:{
-        'Content-Type':'application/json',
-        'X-Telegram-Init-Data': tg.initData || ''   // подпись
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
-    const data = await res.json().catch(()=>({ok:false,error:'bad_json'}));
-    if(!res.ok || data.ok === false) throw new Error(data.error || `HTTP ${res.status}`);
-    return data;
-  }
+async function api(path, method='GET', body){
+  const res = await fetch(API_BASE + path, {
+    method,
+    headers:{
+      'Content-Type':'application/json',
+      'X-Telegram-Init-Data': tg.initData || ''
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json().catch(()=>({ok:false,error:'bad_json'}));
+  if(!res.ok || data.ok === false) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
 
-  // ====== Tabs ======
-  const tabs = [
-    {id:'dashboard', label:'Статус'},
-    {id:'buy',       label:'Купить'},
-    {id:'payments',  label:'Платежи'},
-    {id:'profile',   label:'Профиль'},
-    // 'admin' добавим динамически, если is_admin
-  ];
-  function drawTabs(){
-    const c = document.getElementById('tabs'); c.innerHTML='';
-    for(const t of tabs){
-      const el = document.createElement('div');
-      el.className='tab'; el.dataset.id=t.id; el.textContent=t.label;
-      el.onclick = ()=>activate(t.id);
-      c.appendChild(el);
-    }
-  }
-  function activate(id){
-    document.querySelectorAll('.tab').forEach(x=>{
-      x.classList.toggle('active', x.dataset.id === id);
-    });
-    document.querySelectorAll('.tabpage').forEach(x=>x.classList.add('hidden'));
-    document.getElementById('tab-'+id).classList.remove('hidden');
-  }
+// ===== Tabs
+const tabs = [
+  {id:'dashboard', label:'Статус'},
+  {id:'buy',       label:'Купить'},
+  {id:'payments',  label:'Платежи'},
+  {id:'profile',   label:'Профиль'},
+];
 
-  // ====== Pages ======
-  async function loadMe(){
-    const me = await api('/me');
-    document.getElementById('me').innerHTML =
-      `<div><b>@${me.username || 'без ника'}</b><br>
-        ID: ${me.user_id}<br>
-        Осталось дней: <b>${me.days_left}</b>${me.expired_since ? ` (истёк с ${me.expired_since})` : ''}</div>`;
-    // профиль:
-    document.getElementById('prof-username').value = me.username || '';
-    document.getElementById('prof-comment').value  = me.user_comment || '';
-    // admin tab
-    const has = tabs.find(t=>t.id==='admin');
-    if(me.is_admin && !has){ tabs.push({id:'admin', label:'Админ'}); drawTabs(); }
-  }
+function drawTabs(){ const c = document.getElementById('tabs'); c.innerHTML='';
+  tabs.forEach(t=>{ const el = document.createElement('div'); el.className='tab'; el.dataset.id=t.id; el.textContent=t.label; el.onclick=()=>activate(t.id); c.appendChild(el);});
+}
+function activate(id){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.id===id));
+  document.querySelectorAll('.tabpage').forEach(x=>x.classList.add('hidden'));
+  document.getElementById('tab-'+id).classList.remove('hidden');
+}
 
-  async function recalc(){
-    const days  = parseInt(document.getElementById('days').value,10);
-    const seats = parseInt(document.getElementById('seats').value,10);
-    const r = await api('/calc', 'POST', {days, seats});
-    document.getElementById('buy-info').textContent = `Сумма: ${r.amount} ₽`;
-    document.getElementById('btn-buy').disabled = false;
-  }
+// ===== Pages
+async function loadMe(){
+  const me = await api('/me');
+  document.getElementById('me').innerHTML =
+    `<b>@${me.username || '—'}</b> (ID ${me.user_id})<br>
+     Осталось дней: <b>${me.days_left}</b>${me.expired_since ? ' • истёк с '+me.expired_since : ''}`;
+  document.getElementById('prof-username').value = me.username || '';
+  document.getElementById('prof-comment').value  = me.user_comment || '';
+  if(me.is_admin && !tabs.find(t=>t.id==='admin')){ tabs.push({id:'admin',label:'Админ'}); drawTabs(); }
+}
 
-  async function doBuy(){
-    const days  = parseInt(document.getElementById('days').value,10);
-    const seats = parseInt(document.getElementById('seats').value,10);
-    const comment = (document.getElementById('comment').value||'').trim() || null;
-    const r = await api('/payment/create', 'POST', {days, seats, comment});
-    document.getElementById('buy-info').innerHTML =
-      `Создан платёж <b>#${r.payment_id}</b> на <b>${r.amount} ₽</b>. 
-       Статус: <b>${r.status}</b>. После оплаты админ подтвердит — статус станет "paid".`;
-    await loadPayments();
-  }
+let selDays=30, selSeats=1;
+function bindTiles(){
+  document.querySelectorAll('#days-grid .btn').forEach(b=>{
+    b.onclick=()=>{ selDays=parseInt(b.dataset.days,10);
+      document.querySelectorAll('#days-grid .btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); document.getElementById('btn-buy').disabled=true; document.getElementById('buy-info').textContent=''; };
+  });
+  document.querySelector('#days-grid .btn[data-days="30"]').classList.add('active');
 
-  async function loadPayments(){
-    const r = await api('/payments');
-    const box = document.getElementById('payments'); box.innerHTML='';
-    r.items.forEach(p=>{
-      const el = document.createElement('div'); el.className='item';
-      el.innerHTML = `#${p.payment_id} • ${p.days}д × ${p.seats} чел = <b>${p.amount} ₽</b><br>
-        Статус: <b>${p.status}</b> • ${p.created_at}`;
-      box.appendChild(el);
-    });
-  }
+  document.querySelectorAll('#seats-grid .btn').forEach(b=>{
+    b.onclick=()=>{ selSeats=parseInt(b.dataset.seats,10);
+      document.querySelectorAll('#seats-grid .btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active'); document.getElementById('btn-buy').disabled=true; document.getElementById('buy-info').textContent=''; };
+  });
+  document.querySelector('#seats-grid .btn[data-seats="1"]').classList.add('active');
+}
+bindTiles();
 
-  async function saveProfile(){
-    const username = document.getElementById('prof-username').value.trim() || null;
-    const comment  = document.getElementById('prof-comment').value.trim() || null;
-    await api('/profile', 'POST', {username, comment});
-    document.getElementById('profile-info').textContent = 'Сохранено.';
-    await loadMe();
-  }
+async function recalc(){
+  const r = await api('/calc','POST',{days:selDays,seats:selSeats});
+  document.getElementById('buy-info').textContent = `Сумма: ${r.amount} ₽`;
+  document.getElementById('btn-buy').disabled=false;
+}
+async function doBuy(){
+  const comment=(document.getElementById('comment').value||'').trim()||null;
+  const r=await api('/payment/create','POST',{days:selDays,seats:selSeats,comment});
+  document.getElementById('buy-info').innerHTML=`Создан платёж <b>#${r.payment_id}</b> на <b>${r.amount} ₽</b> • статус <b>${r.status}</b>`;
+  await loadPayments();
+}
+async function loadPayments(){
+  const r=await api('/payments'); const box=document.getElementById('payments'); box.innerHTML='';
+  r.items.forEach(p=>{
+    const el=document.createElement('div'); el.className='item';
+    el.innerHTML = `#${p.payment_id} • ${p.days}д × ${p.seats} = <b>${p.amount} ₽</b><br>Статус: <b>${p.status}</b> • ${p.created_at}`;
+    box.appendChild(el);
+  });
+}
+async function saveProfile(){
+  const username=(document.getElementById('prof-username').value||'').trim()||null;
+  const comment=(document.getElementById('prof-comment').value||'').trim()||null;
+  await api('/profile','POST',{username,comment});
+  document.getElementById('profile-info').textContent='Сохранено.'; await loadMe();
+}
 
-  // Admin
-  async function admSearch(){
-    const q = document.getElementById('adm-q').value.trim();
-    const r = await api('/admin/users?q='+encodeURIComponent(q||'')); // GET
-    const box = document.getElementById('adm-users'); box.innerHTML='';
-    r.items.forEach(u=>{
-      const el = document.createElement('div'); el.className='item';
-      el.innerHTML = `<b>@${u.username||'—'}</b> (ID ${u.user_id}) • Дней: <b>${u.days_left}</b><br>
-        <div class="right" style="margin-top:8px">
-          <button class="btn" type="button" onclick="admAdd(${u.user_id},1)">+1</button>
-          <button class="btn" type="button" onclick="admAdd(${u.user_id},7)">+7</button>
-          <button class="btn" type="button" onclick="admAdd(${u.user_id},30)">+30</button>
-          <button class="btn danger" type="button" onclick="admSub(${u.user_id},1)">−1</button>
-          <button class="btn danger" type="button" onclick="admSub(${u.user_id},7)">−7</button>
-          <button class="btn warning" type="button" onclick="admSet(${u.user_id})">Set…</button>
-          <button class="btn ok" type="button" onclick="admConfirm(${u.user_id})">Подтв. последний платёж</button>
-        </div>`;
-      box.appendChild(el);
-    });
-  }
-  async function admAdd(uid,days){ await api('/admin/user/'+uid+'/add','POST',{days}); await admSearch(); }
-  async function admSub(uid,days){ await api('/admin/user/'+uid+'/sub','POST',{days}); await admSearch(); }
-  async function admSet(uid){
-    const v = prompt('Установить кол-во дней:'); if(!v) return;
-    await api('/admin/user/'+uid+'/set','POST',{days:parseInt(v,10)||0}); await admSearch();
-  }
-  async function admConfirm(uid){
-    await api('/admin/user/'+uid+'/confirm_last_payment','POST',{}); await admSearch(); await loadPayments();
-  }
-  async function admExport(){
-    const r = await api('/admin/export');
-    const blob = new Blob([r.csv], {type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'users.csv'; a.click();
-    document.getElementById('adm-info').textContent = 'Экспорт готов.';
-  }
-  async function admBackup(){
-    const r = await api('/admin/backup');
-    document.getElementById('adm-info').innerHTML = `Бэкап создан: <b>${r.file}</b>`;
-  }
+// ===== Admin
+async function admSearch(){
+  const q=document.getElementById('adm-q').value.trim();
+  const r=await api('/admin/users'+(q?`?q=${encodeURIComponent(q)}`:'')); const box=document.getElementById('adm-users'); box.innerHTML='';
+  r.items.forEach(u=>{
+    const el=document.createElement('div'); el.className='item';
+    el.innerHTML = `<b>@${u.username||'—'}</b> (ID ${u.user_id}) • Дней: <b>${u.days_left}</b>
+      <div class="right" style="margin-top:8px">
+        <button class="btn" type="button" onclick="admOpenUser(${u.user_id})">Профиль</button>
+        <button class="btn" type="button" onclick="admAdd(${u.user_id},7)">+7</button>
+        <button class="btn" type="button" onclick="admAdd(${u.user_id},30)">+30</button>
+        <button class="btn" type="button" onclick="admSet(${u.user_id})">Set…</button>
+        <button class="btn" type="button" onclick="admSub(${u.user_id},1)">−1</button>
+      </div>`;
+    box.appendChild(el);
+  });
+}
+async function admOpenUser(uid){
+  const r=await api('/admin/user/'+uid); const u=r.profile;
+  const pays=r.payments.map(p=>`#${p.payment_id} • ${p.days}д×${p.seats} = ${p.amount} ₽ • ${p.status}`).join('\n');
+  alert(`@${u.username||'—'} (ID ${u.user_id})\nДней: ${u.days_left}\nКомментарий: ${u.user_comment||'—'}\n--- Платежи ---\n${pays || 'нет'}`);
+}
+async function admQueue(){
+  const r=await api('/admin/payments?status=pending'); const box=document.getElementById('adm-pending'); box.innerHTML='';
+  r.items.forEach(p=>{
+    const el=document.createElement('div'); el.className='item';
+    el.innerHTML = `#${p.payment_id} • user ${p.user_id} • ${p.days}д × ${p.seats} = <b>${p.amount} ₽</b>
+      <div class="right" style="margin-top:8px">
+        <button class="btn" type="button" onclick="admOpenUser(${p.user_id})">Профиль</button>
+        <button class="btn" type="button" onclick="admConfirmPayment(${p.payment_id})">Подтвердить</button>
+      </div>`;
+    box.appendChild(el);
+  });
+}
+async function admConfirmPayment(pid){
+  await api('/admin/payment/'+pid+'/confirm','POST',{}); await admQueue(); await loadMe(); await loadPayments();
+}
+async function admAdd(uid,days){ await api('/admin/user/'+uid+'/add','POST',{days}); await admSearch(); }
+async function admSub(uid,days){ await api('/admin/user/'+uid+'/sub','POST',{days}); await admSearch(); }
+async function admSet(uid){ const v=prompt('Установить дней:'); if(!v) return; await api('/admin/user/'+uid+'/set','POST',{days:parseInt(v,10)||0}); await admSearch(); }
 
-  // Buttons & events
-  document.getElementById('btn-calc').addEventListener('click', recalc);
-  document.getElementById('btn-buy').addEventListener('click', doBuy);
-  document.getElementById('btn-refresh').addEventListener('click', loadPayments);
-  document.getElementById('btn-save-profile').addEventListener('click', saveProfile);
-  document.getElementById('adm-search').addEventListener('click', admSearch);
-  document.getElementById('adm-export').addEventListener('click', admExport);
-  document.getElementById('adm-backup').addEventListener('click', admBackup);
+async function admExport(){
+  const r=await api('/admin/export'); const blob=new Blob([r.csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='users.csv'; a.click();
+  document.getElementById('adm-info').textContent='Экспорт готов.';
+}
+async function admBackup(){ const r=await api('/admin/backup'); document.getElementById('adm-info').textContent='Бэкап: '+r.file; }
 
-  // Init
-  drawTabs();
-  activate('dashboard');
-  loadMe().then(()=>loadPayments()).catch(console.error);
+// ===== Events
+document.getElementById('btn-calc').addEventListener('click', recalc);
+document.getElementById('btn-buy').addEventListener('click', doBuy);
+document.getElementById('btn-refresh').addEventListener('click', loadPayments);
+document.getElementById('btn-save-profile').addEventListener('click', saveProfile);
+document.getElementById('adm-search').addEventListener('click', admSearch);
+
+// ===== Init + polling
+drawTabs(); activate('dashboard');
+loadMe().then(loadPayments).catch(console.error);
+
+let pollTimer=null;
+function startPolling(){
+  if(pollTimer) clearInterval(pollTimer);
+  pollTimer=setInterval(async ()=>{
+    try{
+      await loadMe();
+      await loadPayments();
+      if(!document.getElementById('tab-admin').classList.contains('hidden')) await admQueue();
+    }catch(e){}
+  }, 5000);
+}
+startPolling();
 </script>
 </body>
 </html>
-
-
