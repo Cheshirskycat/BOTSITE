@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VPN — Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin:0; padding:16px; }
+    h1 { margin:0 0 12px; font-size:18px; }
+    .card { border:1px solid rgba(0,0,0,.1); border-radius:12px; padding:12px; margin-bottom:12px; }
+    label { display:block; margin:6px 0 4px; }
+    select, input, textarea, button {
+      width:100%; padding:10px; border-radius:10px; border:1px solid rgba(0,0,0,.15);
+    }
+    button { cursor:pointer; border:none; margin-top:10px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .hint { font-size:13px; opacity:.8; margin-top:6px; }
+  </style>
+</head>
+<body>
+  <h1>Подписка VPN</h1>
+
+  <div class="card">
+    <button id="btn-status">🔎 Проверить подписку</button>
+    <div class="hint">Бот пришлёт статус в чат.</div>
+  </div>
+
+  <div class="card">
+    <label>Пакет дней</label>
+    <select id="days">
+      <option value="30">30 дней</option>
+      <option value="60">60 дней (−5%)</option>
+      <option value="90">90 дней (−10%)</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label>Кол-во людей</label>
+        <select id="seats">
+          <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+          <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+      <div>
+        <label>Комментарий (для группы)</label>
+        <input id="comment" placeholder="Имена/никнеймы (необязательно)"/>
+      </div>
+    </div>
+
+    <button id="btn-buy">💳 Оформить</button>
+    <div class="hint">После «Оформить» в чат придёт сумма и кнопка «✅ Готово».</div>
+  </div>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // раскрыть на весь экран
+
+    document.getElementById('btn-status').onclick = () => {
+      tg.sendData(JSON.stringify({action: 'check_sub'}));
+    };
+
+    document.getElementById('btn-buy').onclick = () => {
+      const days = parseInt(document.getElementById('days').value, 10);
+      const seats = parseInt(document.getElementById('seats').value, 10);
+      const comment = document.getElementById('comment').value.trim() || null;
+
+      tg.sendData(JSON.stringify({
+        action: 'create_payment',
+        days, seats, comment
+      }));
+    };
+  </script>
+</body>
+</html>
